@@ -1,6 +1,6 @@
 {
-  "name": "secure-electron-license-keys",
-  "version": "1.1.1",
+  "name": "@igor-lemon/secure-electron-license-keys",
+  "version": "1.2.0",
   "description": "Create and implement offline license key verification for your Electron apps.",
   "main": "lib/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reZach/secure-electron-license-keys.git"
+    "url": "git+https://github.com/igor-lemon/secure-electron-license-keys.git"
   },
   "keywords": [
     "electron",
@@ -17,9 +17,9 @@
   "author": "reZach",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/reZach/secure-electron-license-keys/issues"
+    "url": "https://github.com/igor-lemon/secure-electron-license-keys/issues"
   },
-  "homepage": "https://github.com/reZach/secure-electron-license-keys#readme",
+  "homepage": "https://github.com/igor-lemon/secure-electron-license-keys#readme",
   "devDependencies": {
     "@babel/cli": "^7.13.16",
     "@babel/core": "^7.13.16",

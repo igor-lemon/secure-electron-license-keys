@@ -25,25 +25,25 @@ const parseVersion = function (version) {
 
 const validate = function (fs, crypto, options) {
     let validationResult = {
-        success: false,
+        valid: false,
         appVersion: parseVersion(options.version)
     };
 
     // Retrieve public key and license data
-    const publicKeyPath = path.join(options.root, "public.key");
-    const licenseDataPath = path.join(options.root, "license.data");
+    const publicKeyPath = options.publicKey || options.publicKeyPath || path.join(options.root, "public.key");
+    const licenseDataPath = options.licensePath || path.join(options.root, "license.data");
 
     try {
         // Validate files exist
-        if (fs.existsSync(publicKeyPath) && fs.existsSync(licenseDataPath)) {
-            const publicKey = fs.readFileSync(publicKeyPath);
+        if ((options.publicKey || fs.existsSync(publicKeyPath)) && fs.existsSync(licenseDataPath)) {
+            const publicKey = options.publicKey || fs.readFileSync(publicKeyPath);
             const licenseData = fs.readFileSync(licenseDataPath);
 
             // Attempt to read license data with the public key
             const decrypted = crypto.publicDecrypt(publicKey, licenseData);
 
             Object.assign(validationResult, JSON.parse(decrypted.toString("utf8")));
-            validationResult.success = true;
+            validationResult.valid = true;
         }
     } catch (error) {
         console.error(error);

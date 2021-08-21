@@ -84,6 +84,20 @@ app.on("window-all-closed", () => {
 });
 ```
 
+*Options*
+
+`root<string>` - Path to the root directory<br>
+`version<string>` - App version<br>
+`publicKey<string>` - Public key in text<br>
+`publicKeyPath<string>` - Path to the public key<br>
+`licensePath<string>` - Path to license file
+
+*Priority*
+
+Public key = `options.publicKey` => `options.publicKeyPath` => `<rootPath>/public.key`
+
+License File = `options.licensePath` => `<rootPath>/license.data`
+
 **preload.js**
 ```js
 const {
@@ -152,7 +166,9 @@ When your client page receives a response (ie in the `window.api.licenseKeys.onR
 
 |Property name|Type|Description|
 |---|---|---|
-|success|bool|If license validation was successful|
+|id|string|License UUID|
+|valid|bool|If license validation was successful|
+|created|number|Date of creation|
 |appVersion|object or string|The value of `package.json` in your app. Contains the properties `major`, `minor` and `patch` (all are strings). If the value passed into the **main.js** binding does not follow [semver](https://semver.org/) specification, the value returned in `appVersion` will be a string|
 |major|string|The major value set when generating the license key|
 |minor|string|The minor value set when generating the license key|
