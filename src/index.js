@@ -25,6 +25,11 @@ const parseVersion = function (version) {
 
 const validate = function (fs, crypto, options) {
     let validationResult = {
+        data: {},
+        error: '',
+        inlinePublicKey: !!options.publicKey,
+        publicKeyExists: false,
+        licenseExists: false,
         valid: false,
         appVersion: parseVersion(options.version)
     };
@@ -37,15 +42,27 @@ const validate = function (fs, crypto, options) {
         // Validate files exist
         if ((options.publicKey || fs.existsSync(publicKeyPath)) && fs.existsSync(licenseDataPath)) {
             const publicKey = options.publicKey || fs.readFileSync(publicKeyPath);
+
+            if (publicKey) {
+                validationResult.publicKeyExists = true;
+            }
+
             const licenseData = fs.readFileSync(licenseDataPath);
+
+            if (licenseData) {
+                validationResult.licenseExists = true;
+            }
 
             // Attempt to read license data with the public key
             const decrypted = crypto.publicDecrypt(publicKey, licenseData);
 
-            Object.assign(validationResult, JSON.parse(decrypted.toString("utf8")));
+            validationResult.data = JSON.parse(decrypted.toString("utf8"));
             validationResult.valid = true;
+        } else {
+            validationResult.publicKeyExists = false;
         }
     } catch (error) {
+        validationResult.error = error.message;
         console.error(error);
     }
 
