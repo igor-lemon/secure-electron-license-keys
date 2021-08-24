@@ -40,24 +40,26 @@ const validate = function (fs, crypto, options) {
 
     try {
         // Validate files exist
-        if ((options.publicKey || fs.existsSync(publicKeyPath)) && fs.existsSync(licenseDataPath)) {
+        if (options.publicKey || (publicKeyPath && fs.existsSync(publicKeyPath))) {
             const publicKey = options.publicKey || fs.readFileSync(publicKeyPath);
 
             if (publicKey) {
                 validationResult.publicKeyExists = true;
             }
 
-            const licenseData = fs.readFileSync(licenseDataPath);
+            if (fs.existsSync(licenseDataPath)) {
+                const licenseData = fs.readFileSync(licenseDataPath);
 
-            if (licenseData) {
-                validationResult.licenseExists = true;
+                if (licenseData) {
+                    validationResult.licenseExists = true;
+                }
+
+                // Attempt to read license data with the public key
+                const decrypted = crypto.publicDecrypt(publicKey, licenseData);
+
+                validationResult.data = JSON.parse(decrypted.toString("utf8"));
+                validationResult.valid = true;
             }
-
-            // Attempt to read license data with the public key
-            const decrypted = crypto.publicDecrypt(publicKey, licenseData);
-
-            validationResult.data = JSON.parse(decrypted.toString("utf8"));
-            validationResult.valid = true;
         } else {
             validationResult.publicKeyExists = false;
         }
